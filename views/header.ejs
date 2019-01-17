@@ -1,0 +1,154 @@
+        <!-- Header
+    ================================================= -->
+    <link rel="stylesheet" href="/css/notifbell.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    
+		<header id="header">
+      <nav class="navbar navbar-default navbar-fixed-top menu">
+        <div class="container">
+
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" style="padding: 5px 0 0 0;"><img src="https://www.myfolio.com/images/logo/256_m_white.png" width="50"  alt="logo" /></a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+       
+            <ul class="nav navbar-nav navbar-right main-menu" style="padding-top: 0px;">
+       
+              <li class="dropdown"><a href="/profile">Profile</a></li>
+              <li class="dropdown"><a href="/home"> Home </a></li>
+
+              <li class="dropdown"><a href="/chat" class="unreadmsgbar">    Messages   <span class="badge unreadmsg" style="background-color: red;"></span></a></li>
+              <li class="dropdown"><a class="notification0" style="z-index: 1000;">   Notifications   <span class="badge unreadnotif" style="background-color: red;"></span></a></li>
+              <ul id="notificationMenu" class="notifications">
+                <li class="titlebar">
+                  <span class="title">Notifications</span>
+                  <span class="settings"><i class="icon-cog"></i>
+                  </span>
+                </li>
+                <div class="notifbox">
+             
+      
+                </div>
+                <li class="seeall">
+                  <a>Close</a>
+                </li>
+              </ul>
+
+              <li class="dropdown" style="margin-top: 10px;">
+                <a href="" style="padding-top: 5px; padding-bottom: 5px;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span><img height="10" src="/images/down-arrow.png" alt="" /></span></a>
+                <ul class="dropdown-menu page-list">
+                  <li><a href="/editprofile" >Edit Profile</a></li>
+                  <li><a href="/logout">Logout</a></li>
+                </ul>
+   
+              </li>
+            </ul>
+ 
+          </div> <!-- /.navbar-collapse -->
+        </div><!-- /.container -->
+      </nav>
+    </header>
+    <div class="contain">
+
+    
+ 
+    </div>
+    <!--Header End-->
+      <div class="row" style="position: absolute;z-index: 1000;left: 1%;bottom: 0" id='popUpNotif'>
+    
+     </div> 
+     <script>
+
+     function removNotif(e) {
+        $(e).fadeOut(1000, function() {
+                $(this).remove();
+        });
+}
+$.get('/home/unreadNotif', (row)=>{
+ 
+  if(row.nb > 0)
+  $('.unreadnotif').html(row.nb)
+})
+
+$.get('/chat/unreadchat', (row)=>{
+
+  if(row[0] > 0)
+  $('.unreadmsg').html(row[0])
+
+})
+function FormNotif(link, img, username, msg, time, unread) {
+
+var notf = '<li class=" notif ' + unread + '">' +
+    ' <a tarbet="_blank" href="/profile/' + link + '">' +
+    ' <div class="imageblock">' +
+    ' <img src="/uploads/' + img + '" class="notifimage"  />' +
+    ' </div> ' +
+    ' <div class="messageblock">' +
+    '<div class="message">' +
+    ' <strong style="color:black">' + username + ' </strong> ' + msg +
+    ' </div>' +
+    ' <div class="messageinfo">' +
+    '  <i class="icon-flag"></i>' + time +
+    '   </div></div></a> </li>';
+return (notf);
+}
+
+function appendNotifs() {
+$('.notifbox').html('<h2>Loading Notifications Please wait</h2>')
+$.get('/home/notif', (row) => {
+    if (row == 'Blank')
+        $('.notifbox').html('<h2>You notification section is clear , no notifications yet :)</h2>');
+    else {
+        $('.notifbox').html('');
+        row.forEach((el) => {
+            read = (el.is_read == 0) ? 'unread' : 'read'
+            if (el.type == 1)
+                msg = ' Liked your profile'
+            else if (el.type == 2)
+                msg = ' disliked your profile, sorry to hear that'
+            else if (el.type == 3)
+                msg = ' visited your profile , visit him back'
+            else if (el.type == 4)
+                msg = ' and YOU have been matched recently , start texting each other'
+            else if (el.type == 5)
+                msg = ' rated your profile'
+
+            $('.notifbox').prepend(FormNotif(el.id_from, el.name, el.username, msg, moment(el.time), read))
+            msg = '';
+
+        })
+    }
+
+})
+
+}
+
+function moment(s) {
+
+if (s < 60)
+    return (s + " seconds ago")
+else if (s < 60 * 60)
+    return ((Math.floor(s / 60) == 1) ? (Math.floor(s / 60) + " minute ago") : (Math.floor(s / 60) + " minutes ago"))
+else if (s < 60 * 60 * 24)
+    return ((Math.floor(s / (60 * 60)) == 1) ? (Math.floor(s / (60 * 60)) + " hour ago") : (Math.floor(s / (60 * 60)) + " hours ago"))
+else if (s < 60 * 60 * 24 * 30)
+    return (Math.floor(s / (60 * 60 * 24)) + "days ago")
+}
+
+$('.unreadmsgbar').on('click', function(){
+        $('.unreadmsg').html('');
+      })
+       $('.notification0').on('click', function(){
+        $('.unreadnotif').html('');
+       })
+</script>
+      <!--Header End-->

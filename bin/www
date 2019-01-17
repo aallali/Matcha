@@ -1,0 +1,162 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('newmatcha:server');
+var http = require('http');
+const jwt      = require('jsonwebtoken');
+const Block = require('../helper/block');
+const con = require('../helper/con-deco');
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+const users = {};
+var io = require("socket.io")(server, { pingTimeout: 63000 });
+
+io.on("connection", (socket) => {
+
+
+  // socket.removeAllListener();
+  //verification of token
+socket.on("login", (token) => {
+ 
+  var id = jwt.verify(token, 'snake', async (err, user) => {
+    if (err) return 0;
+    else{
+      console.log(user);
+      socket.join('login');
+      await con.conneco(user.id);
+  // saving userId to array with socket ID
+ users[socket.id] = [user.id, user.nid]
+
+ io.to('login').emit('notif', " Someone is connected"+socket.id);
+      return user
+    }
+    });
+});
+
+
+socket.on('notif', async function(msg){
+  if(typeof users[socket.id] !== 'undefined')
+  {
+    if(await Block.isBlocked(users[socket.id][0], msg[0]) != 1)
+    {
+      var tos = []
+      tos.push(users[socket.id][1]);
+      tos.push(msg[1]);
+      io.to('login').emit('notif'+msg[0], {tos});
+    }
+  }
+  // remove saved socket from users object
+  });
+  socket.on('chat', async function(msg){
+
+    if(typeof users[socket.id] !== 'undefined')
+    {
+      if(await Block.isBlocked(users[socket.id][0], msg.id) != 1)
+      {
+        var data = []
+data.push(users[socket.id][0]);
+data.push(msg.msg);
+        io.to('login').emit('chat'+msg.id, {data});
+      }
+    }
+
+
+    // remove saved socket from users object
+    });
+    
+
+socket.on('disconnect', async function(msg){
+await con.deconneco(users[socket.id][0]);
+delete users[socket.id];
+  // remove saved socket from users object
+  });
+
+
+
+
+
+});
+

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="This is social network html5 template available in themeforest......" />
+		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
+		<meta name="robots" content="index, follow" />
+		<title>Chatroom | Send and Receive Messages</title>
+
+    <!-- Stylesheets
+    ================================================= -->
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/jquery.scrollbar.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/ionicons.min.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+
+    <link href="css/emoji.css" rel="stylesheet">
+    
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="/images/fav.png"/>
+
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+<style>
+  .google{
+    max-height: 200px;
+  }
+</style>
+	</head>
+  <body>
+
+    <!-- Header
+    ================================================= -->
+	   <%- include("header.ejs") %>
+    <!--Header End-->
+
+    <div id="page-contents">
+    	<div class="container">
+    		<div class="row">
+
+    			<!-- Newsfeed Common Side Bar Left
+          ================================================= -->
+    			<div class="col-md-3 static">
+            <div class="profile-card" style="background: url(/images/profilecover.jpg)no-repeat;">
+            	<img src="/uploads/<%= name[0].name %>" alt="user" class="profile-photo" />
+            	<h5><a href="/profile" class="text-white"><%= name[0].fname %> <%= name[0].lname %></a></h5>
+            	<a href="#" class="text-white"><i class="ion ion-android-person-add"></i> <%= name[0].likes %> Likes</a>
+            </div><!--profile card ends-->
+
+            <%- include("partial/chat-liked-list.ejs") %><!--chat block ends-->
+          </div>
+          
+    			<div class="col-md-9" >
+
+            <!-- Post Create Box
+            ================================================= -->
+
+
+            <!-- Chat Room
+            ================================================= -->
+            <div class="chat-room">
+              <div  class="row">
+                <div class="col-md-5">
+                  <ul class="nav nav-tabs contact-list scrollbar-wrapper scrollbar-outer contactsBar google" id="contactsBar">
+
+
+                  </ul><!--Contact List in Left End-->
+
+                </div>
+                <div class="col-md-7">
+
+                  <!--Chat Messages in Right-->
+                  <div class="tab-content scrollbar-wrapper wrapper scrollbar-outer" id="doitdoit">
+                    <div class="tab-pane active">
+                      <div class="chat-body">
+                      	<ul class="chat-message" id="chat-message">
+                      		
+                         
+                      	</ul>
+                      </div>
+                    </div>
+
+                  </div><!--Chat Messages in Right End-->
+
+
+                  <div class="send-message">
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="msgToS" placeholder="Type your message">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" id="sendMSg" type="button">Send</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+
+    			<!-- Newsfeed Common Side Bar Right
+          ================================================= -->
+
+    		</div>
+    	</div>
+    </div>
+
+
+          <!-- Footer
+          ================================================= -->
+          <%- include("partial/footer.ejs") %>
+    
+    <!--preloader-->
+    <div id="spinner-wrapper">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts
+    ================================================= -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.sticky-kit.min.js"></script>
+    <!-- <script src="js/jquery.scrollbar.min.js"></script> -->
+    <script src="js/script.js"></script>
+    <script src="js/notifbell.js"></script>
+    <script src="js/like-profile.js"></script>
+<script>
+  var sendStop = 0;
+  var id = 0;
+  var id1 = 0;
+  var name1 = '';
+  var pic1 = 's';
+  $.get('/chat/matches', (row)=>{
+    if(row !== '0')
+    row.forEach((el)=>{
+      $('#contactsBar').append(contact_bar(el[0].id, el[0].name, el[0].fname+" "+el[0].lname, el[1]))
+    })
+    else
+    $('#contactsBar').append("<h3>You have no matches yet , start giving likes to other people :)</h3>");
+  })
+
+
+function openConv(did)
+{
+  $('.unread'+did).html('');
+  $('#doitdoit').css('height', '500px');
+  $('#doitdoit').css('overflow-y', 'auto');
+
+
+
+
+
+  // $('#cont'+did).attr('name');
+  var name2 = $('#cont'+did).attr('name');
+  var pic2 = $('#cont'+did).attr('pic');
+  id = did;
+
+  $.post('/chat/fetchConv', {id: did}, (res)=>{
+  if(res == 'KO')
+  location.reload();
+  
+    $('.unreadmsg').html('');
+    if(res == 'Blank')
+    {
+      //console.log('No messages with this user');
+    } 
+    else{
+      id1 =  res[0][0].id;
+      pic1 = res[0][0].name;
+      name1 =  res[0][0].fname  + " " + res[0][0].lname;
+    $('#chat-message').html('');
+    if(res[1] != 0)
+    {
+      res[1].forEach((el)=>{
+      if(el.id_from == id)
+          $('#chat-message').append(inComming_msg(pic2 , name2, moment(el.time), el.message));
+      else
+          $('#chat-message').append(outGoing_msg(pic1 , name1, moment(el.time), el.message));
+
+    })
+    $('#doitdoit').animate({
+        scrollTop: $('#doitdoit').get(0).scrollHeight
+    }, 1000);
+    }
+
+
+
+    }   
+    if(sendStop  == 0)
+ {
+  $('#sendMSg').on('click', function(){
+
+var msg = $('#msgToS').val();
+if(msg.trim().length > 0)
+{
+  socket.emit('chat', {id: id, msg: escapeHtml(msg)});
+$.post('/chat/send', {id: id, msg:msg}, (res)=>{});
+var msg = $('#msgToS').val();
+$('#chat-message').append(outGoing_msg(pic1, name1, 'just now', escapeHtml(msg)));
+$('#msgToS').val('');
+$('#doitdoit').animate({
+        scrollTop: $('#doitdoit').get(0).scrollHeight
+    }, 1000);
+}
+
+
+})
+
+    socket.on('chat'+id1, function(msg){
+ 
+     if(msg.data[0] == id) {
+       if(msg.data[1].trim().length > 0)
+       {
+        $('.unreadmsg').html(parseInt($('.unreadmsg').html()) - 1);
+     $('#chat-message').append(inComming_msg(pic2, name2, 'just now', msg.data[1]));
+     $('#doitdoit').animate({
+        scrollTop: $('#doitdoit').get(0).scrollHeight
+    }, 1000);
+       }
+      
+     }
+
+
+  
+     // remove saved socket from users object
+     });
+ }
+ sendStop= 1;
+  });
+
+
+}
+
+
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) {
+        return map[m];
+    });
+}
+
+function moment(s) {
+
+if (s < 60)
+    return (s + " seconds ago")
+else if (s < 60 * 60)
+    return ((Math.floor(s / 60) == 1) ? (Math.floor(s / 60) + " minute ago") : (Math.floor(s / 60) + " minutes ago"))
+else if (s < 60 * 60 * 24)
+    return ((Math.floor(s / (60 * 60)) == 1) ? (Math.floor(s / (60 * 60)) + " hour ago") : (Math.floor(s / (60 * 60)) + " hours ago"))
+else if (s < 60 * 60 * 24 * 30)
+    return (Math.floor(s / (60 * 60 * 24)) + "days ago")
+}
+
+function outGoing_msg(pic, name, time, msg)
+{
+  var msg = 
+  '<li class="left">'+
+    '<img src="/uploads/'+pic+'" alt="" class="profile-photo-sm pull-left" />'+
+    '<div class="chat-item">'+
+     ' <div class="chat-item-header">'+
+       ' <h5>'+name+'</h5>'+
+       ' <small class="text-muted">'+time+'</small>'+
+       ' </div>'+
+       ' <p style="word-wrap: break-word;max-height:200px;overflow-y:auto">'+msg+'</p>'+
+       '</div></li>';
+       return(msg);
+}
+function inComming_msg(pic, name, time, msg)
+{
+  var msg = 
+  '<li class="right">'+
+    '<img src="/uploads/'+pic+'" alt="" class="profile-photo-sm pull-right" />'+
+    '<div class="chat-item">'+
+     ' <div class="chat-item-header">'+
+       ' <h5>'+name+'</h5>'+
+       ' <small class="text-muted">'+time+'</small>'+
+       ' </div>'+
+       ' <p style="word-wrap: break-word;;max-height:200px;overflow-y:auto">'+msg+'</p>'+
+       '</div></li>';
+       return(msg);
+}
+
+function contact_bar(id, pic, name, unread)
+{
+if(unread == 0)
+{
+  unread ='';
+  msg = 'All is set to date.'
+}
+else
+{
+  msg = 'New message from '+name;
+}
+  var contact =    ' <li id="cont'+id+'" onclick="openConv('+id+')" name="'+name+'" pic="'+pic+'">'+
+                     ' <a>'+
+                        '<div class="contact">'+
+                        '	<img src="/uploads/'+pic+'" alt="" class="profile-photo-sm pull-left"/>'+
+                        '	<div class="msg-preview">'+
+                        	'	<h6>'+name+'</h6>'+
+                        		'<p class="text-muted">'+ msg +'</p>'+
+                           ' <small class="text-muted">a min ago</small>'+
+                           ' <div class="chat-alert unread'+id+'">'+unread+'</div>'+
+                        '	</div>'+
+                       ' </div>'+
+                      '</a>'+
+                   ' </li>';
+  return (contact);
+}
+
+
+//  CHAT LIVE
+//     ================================================= 
+$('.unreadmsg').html('');
+function notif_visit(id)
+{
+    var tos = []
+    tos.push(id);
+    tos.push(3);
+    socket.emit('notif',tos);
+}
+</script>
+
+    
+  </body>
+</html>

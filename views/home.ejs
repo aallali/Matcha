@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This is social network html5 template available in themeforest......" />
+    <meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
+    <meta name="robots" content="index, follow" />
+    <title>Nearby People | Find Local People</title>
+   
+    <!-- Stylesheets
+    ================================================= -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-tagsinput.css">
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="images/fav.png"/>
+    <link rel="stylesheet" href="css/bootstrap-slider.css">
+   
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/autocomplete.css">
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css" rel="stylesheet" />
+<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js"></script>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script>
+  mapboxgl.accessToken = "pk.eyJ1IjoiYWFsbGFsaSIsImEiOiJjazUydWx6OTQwMW1pM2ZtZDJ3ZXQwODluIn0.0Cafxzl3UOvSTcy9C-m_CQ";
+</script>
+<script src="/js/index.js"></script>
+<style>
+  .likedrecently{
+    max-height: 900px;
+    overflow-y:auto; /* Add the ability to scroll */
+  }
+  .likedrecently::-webkit-scrollbar {
+    display: none;
+    }
+    .profileSlid{
+      max-height: 1000px;
+      overflow-y:auto;
+      border-top:solid 1px ;
+    }
+    .profileSlid::-webkit-scrollbar{
+      display: none;
+    }
+    .likedlist{
+      max-height: 450px;
+      overflow-y: auto;
+    }
+    .likedlist::-webkit-scrollbar {
+    display: none;
+    }
+    .remMrgB{
+    margin-bottom: 0px;
+  }
+</style>
+  </head>
+
+   <%- include("header.ejs") %>
+   
+    <div id="page-contents">
+      <div class="container">
+        <div class="row">
+          <!-- Newsfeed Common Side Bar Left
+          ================================================= -->
+          <div class="col-md-3 static">
+            <div class="profile-card" style="background: url(/images/profilecover.jpg)no-repeat;">
+              <img src="/uploads/<%= data.pdp %>" alt="user" class="profile-photo" />
+              <h5><a href="/profile" class="text-white"><%= data.fname %> <%= data.lname %></a></h5>
+             
+              </div><!--profile card ends-->
+              <%- include("partial/chat-liked-list.ejs") %>
+
+       
+                </div>
+
+                 <a id="ageHid" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" style="display: none"></a>
+                    <a id="fameHid" data-toggle="collapse" href="#collapseFame" role="button" aria-expanded="false" aria-controls="collapseFame" style="display: none"> </a>
+                    <a id="distHid" data-toggle="collapse" href="#collapseDist" role="button" aria-expanded="false" aria-controls="collapseDist" style="display: none"> </a>
+                    <a id="genHid" data-toggle="collapse" href="#collapseGen" role="button" aria-expanded="false" aria-controls="collapseGen" style="display: none"> </a>
+                    <a id="tagHid" data-toggle="collapse" href="#collapseTag" role="button" aria-expanded="false" aria-controls="collapseTag" style="display: none"> </a>
+                    <a id="sortHid" data-toggle="collapse" href="#collapseSort" role="button" aria-expanded="false" aria-controls="collapseSort" style="display: none"> </a>
+
+                <div class="col-md-7" >
+
+                  <div class="people-nearby" style="font-size:20px">
+                    <h1 id="filtreHid" data-toggle="collapse" href="#collapseFiltre" role="button" aria-expanded="false" aria-controls="collapseFiltr">Filtre / Sort / Search</h1>
+                 
+                                      <!-- Post Create Box
+                  ================================================= -->
+                  <div class="collapse" id="collapseFiltre">
+                    <div style="border: solid 0px;padding: 20px 20px 20px 20px;border-radius: 8px">
+                      <div class="row">
+                         <div class="edit-block remMrgB ">
+                          <div class="line"></div>
+                          <div class="settings-block">
+                            <div class="row">
+                              <div class="col-sm-9">
+                                <div class="switch-description">
+                                  <div><strong style="color: black;">by Age</strong></div>
+                                  <p>Enable this if you want to search/filtre profiles by Age</p>
+                                </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <div class="toggle-switch">
+                                  <label class="switch">
+                                    <input  id="ageCh"type="checkbox">
+                                    <span class="slider round"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="collapse" id="collapseExample">
+                          <div class="card card-body">
+                            <!-- Range -->
+                            <div style="padding: 5px 5px 5px 5px;width: 90%">
+                              Age gap :
+                              <input id="bs-slider-2" type="text" value data-slider-min="16" data-slider-max="100" data-slider-step="1" data-slider-value="[18,80]">
+                              <h4 style="float:right" id="rightAge">100 y.o</h4>
+                              <h4 style="float:left" id="leftAge">16 y.o</h4>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+         
+                      <div class="row">
+                        <div class="edit-block remMrgB">
+                          <div class="line"></div><div class="line"></div>
+                          <div class="settings-block">
+                            <div class="row">
+                              <div class="col-sm-9">
+                                <div class="switch-description">
+                                  <div><strong style="color: black;">by Fame</strong></div>
+                                  <p>Enable this if you want to search/filtre profiles by fame</p>
+                                </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <div class="toggle-switch">
+                                  <label class="switch">
+                                    <input id="fameCh" type="checkbox">
+                                    <span class="slider round"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="collapse" id="collapseFame">
+                          <div class="card card-body">
+                            <!-- Range -->
+                            <div style="padding: 5px 5px 5px 5px;width: 90%">
+                              Fame gap :
+                              <input id="bs-slider-3" type="text" value data-slider-min="0" data-slider-max="5" data-slider-step="1" data-slider-value="[0,5]">
+                              <h4 style="float:right" id="rightStar">5 stars</h4>
+                              <h4 style="float:left" id="leftStar">0 stars</h4>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="edit-block remMrgB">
+                          <div class="line"></div><div class="line"></div>
+                          <div class="settings-block">
+                            <div class="row">
+                              <div class="col-sm-9">
+                                <div class="switch-description">
+                                  <div><strong style="color: black;">by Distance</strong></div>
+                                  <p>Enable this if you want to search/filtre profiles by Age</p>
+                                </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <div class="toggle-switch">
+                                  <label class="switch">
+                                    <input  id="distCh" type="checkbox">
+                                    <span class="slider round"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="collapse" id="collapseDist">
+                    
+                          <div class="card card-body">
+                            <!-- Range -->
+                      <div class="row" style="margin-left: 15px;" id="distanceArea">
+                              <div style="padding: 5px 5px 5px 5px;width: 90%">
+                                 Distane gap :
+                                <div id="distArea">
+                                <input id="bs-slider-4" type="text" value data-slider-min="0" data-slider-max="1000" data-slider-step="5" data-slider-value="[0,1000]">
+                                <h4 style="float:right" id="rightDist">1000 KM</h4>
+                                <h4 style="float:left" id="leftDist">0 KM</h4>
+                              </div>
+                              </div>
+                            </div>
+                
+                   
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row"  style="font-size:20px">
+                        <div class="edit-block remMrgB">
+                          <div class="line"></div><div class="line"></div>
+                          
+  
+                          <div class="settings-block">
+                            <div class="row">
+                              <div class="col-sm-9">
+                                <div class="switch-description">
+                                  <div><strong style="color: black;">by Gender</strong></div>
+                                  <p>Enable this if you want to search/filtre profiles by specefic Gender</p>
+                                </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <div class="toggle-switch">
+                                  <label class="switch">
+                                    <input  id="genCh" type="checkbox">
+                                    <span class="slider round"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="collapse" id="collapseGen">
+                          <div class="card card-body">
+                            <!-- Range -->
+                            <div style="padding: 5px 5px 5px 5px;width: 90%">
+                              <div class="form-group gender">
+                                <span class="custom-label"><strong>Show me the: </strong></span>
+                                <label class="radio-inline">
+                                  <input type="radio" name="gender" value="1" > Males
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="gender" value="2"> Females
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="gender" value="3" checked> Both
+                                </label>
+                              </div>
+                              <br/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="row">
+                        <div class="edit-block remMrgB">
+                          <div class="line"></div><div class="line"></div>
+                          <div class="settings-block">
+                            <div class="row">
+                              <div class="col-sm-9">
+                                <div class="switch-description">
+                                  <div><strong style="color: black;">by Commun Tags</strong></div>
+                                  <p>Enable this if you want to search/filtre profiles by commun Tags</p>
+                                </div>
+                              </div>
+                              <div class="col-sm-3">
+                                <div class="toggle-switch">
+                                  <label class="switch">
+                                    <input  id="tagCh" type="checkbox">
+                                    <span class="slider round"></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="collapse" id="collapseTag">
+                          <div class="card card-body">
+                              <!--  TAGS -->
+                             
+                              <%- include("partial/interetsFiltre.ejs") %>
+                           <!-- // TAGS -->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                     
+                          <div class="edit-block remMrgB">
+                            <div class="line"></div><div class="line"></div>
+                            <div class="settings-block">
+                              <div class="row">
+                                <div class="col-sm-9">
+                                  <div class="switch-description">
+                                    <div><strong style="color: black;">Costumize Your result</strong></div>
+                                    <p>Enable this if you want to put a costum sort of the result found :)</p>
+                                  </div>
+                                </div>
+                                <div class="col-sm-3">
+                                  <div class="toggle-switch">
+                                    <label class="switch">
+                                      <input  id="sortCh" type="checkbox">
+                                      <span class="slider round"></span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <div class="collapse" id="collapseSort">
+                          <div class="card card-body">
+                            <!-- Range -->
+                            <div style="padding: 5px 5px 5px 5px;width: 90%">
+                              <div class="container">
+                                <div class="row">
+                                  
+                                  <div class="col-lg-12">
+                              <div class="form-group gender">
+                                <span class="custom-label"><strong>Sort profiles by :: </strong></span>
+                                <label class="radio-inline">
+                                  <input type="radio" value="1" name="sortBy" >Fame
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" value="2" name="sortBy" checked>Age
+                                </label>
+                              
+                                <label class="radio-inline">
+                                  <input type="radio" value="3" name="sortBy">Distance
+                                </label>
+                                <div class="row"> 
+                                <label class="radio-inline">
+                                  <input type="radio" value="4" name="sortBy">Gender
+                                </label>
+                              </div>
+                            </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="line"></div>
+  
+                      <div class="row">
+                        <button class="btn-info" style="width: 100%;height:50px;font-size: 20px;border-radius:2px" id="search">Search</button>
+                      </div>
+                      <br>
+                      </div>
+                  </div>
+                  <!-- Nearby People List
+                  ================================================= -->
+
+                                        <div id="map" style="height: 400px;"></div>
+
+                    <div id="profiles" class="profileSlid">
+  
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Newsfeed Common Side Bar Right
+                ================================================= -->
+                <div class="col-md-2 static" style="padding-right:0px;margin-right: 0px;">
+                  <h4 class="grey">Liked Recently</h4>
+
+                  <div id="sticky-sidebar" class ="likedrecently">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Footer
+          ================================================= -->
+          <%- include("partial/footer.ejs") %>
+          <!--preloader-->
+          <div id="spinner-wrapper">
+            <div class="spinner"></div>
+          </div>
+          <!-- Scripts
+          ================================================= -->
+          
+   
+          <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+          <script src="js/bootstrap.min.js"></script>
+          <script src="js/jquery.sticky-kit.min.js"></script>
+          <script src="js/jquery.scrollbar.min.js"></script>
+          <script src="js/script.js"></script>
+          <script src="js/bootstrap-slider.js"></script>
+          <script src="js/autocomplete.js"></script>
+          <script src="js/infoProfileTags.js"></script>
+          <script src="js/filtre-slider.js"></script>
+          <script src="js/search.js"></script>
+          <script src="js/like-profile.js"></script>
+          <script src="js/notifbell.js"></script>
+        
+          <!-- Javascript -->
+          <script>
+var offset = 20;
+var i = 0;
+var color =[ 'black', '#ff007f', 'green','red', 'blue', 'gray', '#27aae1'];
+var border = "";
+var tags = ""
+
+$(document).ready(function () {
+  $("#profiles").scroll(function () {
+     var $this = $(this);
+     var height = this.scrollHeight - $this.height(); // Get the height of the div
+     var scroll = $this.scrollTop(); // Get the vertical scroll position
+     var isScrolledToEnd = (scroll >= height);
+     if (isScrolledToEnd) {
+       offset = offset + 7;
+       getResult(offset, 6);
+      }
+    });
+  });
+
+
+
+$('#sticky-sidebar').prepend('<div id="spinner-wrapper">'+
+            '<div class="spinner"></div>'+
+       '   </div>');
+
+       $.post('/home/all', function(row) {
+    var pos = [];
+    if (row != 'No data') {
+
+        row.forEach(el => {
+            var full_name = el.fname + " " + el.lname;
+            var newLoc = {
+                id: el.id,
+                lat: el.lat,
+                lon: el.lon,
+                tooltip: full_name
+            }
+            pos.push(newLoc);
+            if (el.tags)
+                el.tags.forEach(el => {
+                    tags = tags + '<span class="badge badge-primary" style="border:solid 1px black;font-size:12px;background: ' + color[i] + ';">#' + el.tag + '</span> '
+                    i++;
+                })
+                i = 0;
+            glob.push(el); 
+            if (el.gender == 'male')
+                border = 'style="border:solid 3px rgb(31, 118, 225)"'
+            else
+                border = 'style="border:solid 3px rgb(235, 121, 140)"'
+
+            var myvar = '<div class="nearby-user" like="' + el.id + '">' +
+                '                      <div class="row">' +
+                '                        <div class="col-md-2 col-sm-2">' +
+                '                          <img ' + border + ' src="/uploads/' + el.name + '" alt="user" class="profile-photo-lg" />' +
+                '                        </div>' +
+                '                        <div class="col-md-7 col-sm-7">' +
+                '                          <h5><a onclick="notif_visit('+el.id+')" target="_blank"   href="/profile/' + el.id + '" class="profile-link">' + el.fname + ' ' + el.lname + '</a><b style="color:black"> (' + el.age + ')&nbsp;&nbsp; [<b style="color:#27aae1;font-size:17px">' + el.fame + '</b><b style="font-size:20px;color:black">&#10025;</b>]</b> </h5>' +
+                '                          <p>' + tags + '</p>' +
+                '                          <p class="text-muted">' + el.city + '/' + el.country + ' ' + el.km + ' KM away</p>' +
+                '                        </div>' +
+                '                        <div class="col-md-3 col-sm-3">' +
+                '                          <button class="btn btn-primary pull-right" onclick="slidProfile(this)">Like</button>' +
+                '                        </div></div></div>';
+            tags = ''
+            var newD = $(myvar).hide();
+            $('#profiles').append(newD);
+            newD.slideDown();
+
+        });
+       
+        new Mapkick.Map("map", pos);
+    }
+    $('#spinner-wrapper').fadeOut();
+})
+
+
+
+         </script>
+          <!-- / Javascript -->
+        </body>
+      </html>

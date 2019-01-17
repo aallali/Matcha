@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="This is social network html5 template available in themeforest......" />
+    <meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
+    <meta name="robots" content="index, follow" />
+    <title>Edit Profile | Edit Profile Page</title>
+    <!-- Stylesheets
+    ================================================= -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-tagsinput.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="images/fav.png"/>
+
+
+
+  </head>
+  <body>
+   
+    <%- include("header.ejs") %>
+    <div class="container">
+      <!-- Timeline
+      ================================================= -->
+      <div class="timeline">
+        <div class="timeline-cover" style="background:url(/uploads/1pdp1578718609310.jpg) no-repeat;">
+          <!--Timeline Menu for Large Screens-->
+          <div class="timeline-nav-bar hidden-sm hidden-xs">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="profile-info">
+                  <img  src="/" alt="" class="img-responsive profile-photo pdp" />
+                  <h3 class="fullName"></h3>
+                  <p class="text-muted"></p>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <ul class="list-inline profile-menu">
+                  <li><a href="/home">Timeline</a></li>
+                  <li><a href="/editprofile" class="active">About</a></li>
+                
+                  <li><a href="/chat">Friends</a></li>
+                </ul>
+                <ul class="follow-me list-inline">
+                  <li ><b class="nlikes"></b> people Liking your Profile</li>
+                </ul>
+              </div>
+            </div>
+            </div><!--Timeline Menu for Large Screens End-->
+            <!--Timeline Menu for Small Screens-->
+            <div class="navbar-mobile hidden-lg hidden-md">
+              <div class="profile-info">
+                <img src="/" alt="" class="img-responsive profile-photo pdp" />
+                <h4 class="fullName"></h4>
+                <p class="text-muted">New User</p>
+              </div>
+              <div class="mobile-menu">
+                <ul class="list-inline">
+                  <li><a href="/home">Timeline</a></li>
+                  <li><a href="/editprofile" class="active">About</a></li>
+                
+                  <li><a href="/chat">Friends</a></li>
+                </ul>
+            
+              </div>
+              </div><!--Timeline Menu for Small Screens End-->
+            </div>
+            <div id="page-contents">
+              <div class="row">
+                <div class="col-md-3">
+                  
+                  <!--Edit Profile Menu-->
+                  <ul class="edit-menu">
+                    <li class="active"><i class="icon ion-ios-information-outline"></i> <a class="nav-link active" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">About</a></li>
+                    <li><i class="icon ion-ios-heart-outline"></i>  <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Interets</a></li>
+                    <li><i class="icon ion-ios-locked-outline"></i><a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Privacy</a></li>
+                    <li><i class="icon ion-images"></i><a class="nav-link" id="album-tab" data-toggle="tab" href="#album" role="tab" aria-controls="contact" aria-selected="false">Album</a></li>
+                  </ul>
+                  
+                  
+                </div>
+                <div class="col-md-7">
+            
+                  <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade " id="about" role="tabpanel" aria-labelledby="about-tab">
+               
+                      
+                      <%- include("partial/about.ejs") %>
+                  
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    
+                      <%- include("partial/interets.ejs") %>
+                    </div>
+      
+                    <div class="tab-pane fade" id="album" role="tabpanel" aria-labelledby="album-tab">
+                      <%- include("partial/album.ejs") %>
+             
+                    </div>
+                                         
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+                      <%- include("partial/editpass.ejs") %>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+            
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Footer
+        ================================================= -->
+
+        <%- include("partial/footer.ejs") %>
+        <!--preloader-->
+        <div id="spinner-wrapper">
+          <div class="spinner"></div>
+        </div>
+        <!-- Scripts
+        ================================================= -->
+   <!--      <script src="js/jquery-3.1.1.min.js"></script> -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.sticky-kit.min.js"></script>
+        <script src="js/jquery.scrollbar.min.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/infoProfileTags.js"></script>
+        <script src="js/autocomplete.js"></script>
+        <script src="/js/like-profile.js"></script>
+        <script src="/js/notifbell.js"></script>
+
+        <script type="text/javascript">
+        $.post('/editprofile/album/pdp', function(pdp){
+          if(pdp !== '0')
+          $('.pdp').attr('src', '/uploads/'+pdp)
+        })
+        $( document ).ready(function() {
+        $('#profile-tab').click();
+        $('#about-tab').click();
+        });
+        </script>
+      </body>
+    </html>
+
+

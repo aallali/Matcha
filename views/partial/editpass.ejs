@@ -1,0 +1,119 @@
+<style>
+.blacktitle{
+color:black;
+}
+.redbtn{
+ color: black;
+}
+td{
+  color:black;
+  font: bold;
+}
+</style>
+<div class="edit-profile-container">
+  <h1 class="blacktitle">Blocked List :</h1>
+   <ul id="blockedlist">
+     your blocked list is empty.
+   </ul>
+  </div>
+
+      <div class="edit-profile-container">
+        <h1 class="blacktitle">Statistics :</h1>
+        <button class="btn btn-warning redbtn" >Toggle</button>
+
+        <table id="statstable" class="table table-dark" style="font-size: 20px;">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Action</th>
+              <th scope="col">given</th>
+              <th scope="col">received</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Likes</td>
+              <td id="X-lg"></td>
+              <td id="X-lt"></td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td >DisLikes</td>
+              <td id="X-dg"></td>
+              <td id="X-dt"></td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td >Visits</td>
+              <td id="X-vg"></td>
+              <td id="X-vt"></td>
+            </tr>
+            <tr>
+              <th scope="row">4</th>
+              <td >Matches</td>
+              <td id="X-mg"></td>
+              <td id="X-mt"></td>
+            </tr>
+            <tr>
+              <th scope="row">5</th>
+              <td >Report</td>
+              <td id="X-rg"></td>
+              <td id="X-rt"></td>
+            </tr>
+            <tr>
+              <th scope="row">6</th>
+              <td >Block</td>
+              <td id="X-bg"></td>
+              <td id="X-bt"></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+  <script>
+  
+  $.post('/editprofile/blockedlist', (list)=>{
+if(list.list != 0)
+{
+  $('#blockedlist').html('')
+  list.list.forEach(el => {
+      $('#blockedlist').append("<li id='block"+el.id+"' ><h3><b style='color:black'>"+el.fname + " " + el.lname + "</b> ("+el.username+") <b style='color:red' onclick='unblock("+el.id+")'>unblock</b> </h3> </li>")
+      
+    });
+}
+})
+function unblock(id)
+{
+  $('#block'+id).slideToggle('slow');
+  $.post('/editprofile/unblock',{id: id}, (res)=>{
+  
+  })
+
+}
+$('.redbtn').on('click', function(){
+$('#statstable').slideToggle('slow');
+});
+$.post('/editprofile/statistics',(row)=>{
+ if(row == 'KO')
+ location.reload();
+
+  $('#X-lg').html(row[0]);
+  $('#X-lt').html(row[1]);
+
+  $('#X-dg').html(row[2]);
+  $('#X-dt').html(row[3]);
+
+  $('#X-vg').html(row[4]);
+  $('#X-vt').html(row[5]);
+
+  $('#X-mg').html(row[6]);
+  $('#X-mt').html(row[6]);
+
+  $('#X-rg').html(row[7]);
+  $('#X-rt').html(row[8]);
+
+  $('#X-bg').html(row[9]);
+  $('#X-bt').html(row[10]);
+
+})
+  </script>

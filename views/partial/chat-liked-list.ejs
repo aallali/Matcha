@@ -1,0 +1,40 @@
+<div id="chat-block">
+    <div class="title">Chat online</div>
+    <ul class="online-users onlinetoo list-inline">
+
+    </ul>
+    <br></br>
+
+    <div id="liked-block">
+      <div class="title">Users You Liked </div>
+      <ul class="online-users list-inline likedlist" id="LikedUl">
+      </ul>
+      </div><!--liked block ends-->
+    </div><!--chat block ends-->
+    <script>
+
+$(document).ready(function() {
+ $.get('/chat/online', (row)=>{
+row.forEach((el)=>{
+  if(el.online == 1)
+  $('.onlinetoo').prepend('<li><a href="/chat" title="."><img src="/uploads/'+el.pic+'" alt="user" class="img-responsive profile-photo" /><span class="online-dot" style="color:red"></span></a></li>')
+})
+
+})
+setTimeout(function() {
+    $.get('/home/likedlist', (row) => {
+        if (row != 'ZERO') {
+            row.forEach((row) => {
+                var li = '<li><a target="_blank" onclick="notif_visit(' + row.id + ')" href="/profile/' + row.id + '" title="' + row.fname + ' ' + row.lname + '"><img src="/uploads/' + row.name + '" alt="user" class="img-responsive profile-photo" /></span></a></li>';
+                var newD = $(li).hide();
+                $('#LikedUl').append(newD);
+                newD.slideDown();
+            })
+        } else {
+            $('#LikedUl').append('<h3>You Still didnt liked anyone , start now , and try your luck </h3>');
+        }
+    })
+}, 1000);
+
+});
+</script>

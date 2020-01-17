@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="This is social network html5 template available in themeforest......" />
+		<meta name="keywords" content="Social Network, Social Media, Make Friends, Newsfeed, Profile Page" />
+		<meta name="robots" content="index, follow" />
+		<title>About Me | Learn Detail About Me</title>
+
+    <!-- Stylesheets
+    ================================================= -->
+		<link rel="stylesheet" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/css/style.css" />
+		<link rel="stylesheet" href="/css/ionicons.min.css" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+    
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="/images/fav.png"/>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="/js/jquery-3.1.1.min.js"></script>
+
+<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js"></script>
+
+<script>
+  mapboxgl.accessToken = "pk.eyJ1IjoiYWFsbGFsaSIsImEiOiJjazUydWx6OTQwMW1pM2ZtZDJ3ZXQwODluIn0.0Cafxzl3UOvSTcy9C-m_CQ";
+</script>
+<script src="/js/index.js"></script>
+
+
+<style>
+
+/* Rating Star Widgets Style */
+.rating-stars ul {
+  list-style-type:none;
+  padding:0;
+  
+
+}
+.rating-stars ul > li.star {
+  display:inline-block;
+  
+}
+
+/* Idle State of the stars */
+.rating-stars ul > li.star > i.fa {
+  font-size:2.5em; /* Change the size of the stars */
+  color:#ccc; /* Color on idle state */
+}
+
+/* Hover state of the stars */
+.rating-stars ul > li.star.hover > i.fa {
+  color:#FFCC36;
+}
+
+/* Selected state of the stars */
+.rating-stars ul > li.star.selected > i.fa {
+  color:#FF912C;
+}
+
+</style>
+	</head>
+  <body>
+    <!-- Header
+    ================================================= -->
+    <%- include("header.ejs") %>
+    <!--Header End-->
+
+    <div class="container">
+
+      <!-- Timeline
+      ================================================= -->
+      <div class="timeline">
+        <div class="timeline-cover" style="background: url(/uploads/<%= data.pdp %> ) no-repeat;">
+
+          <!--Timeline Menu for Large Screens-->
+          <div class="timeline-nav-bar hidden-sm hidden-xs">
+            <div class="row">
+              <div class="col-md-3" id="divcol3f">
+                <div id="leftPanel">
+                  <div class="profile-info">
+                    <input type="text" id="idrate" value="<%= data.id %>" hidden>
+                    <input type="text" id="nstars" value="<%= data.nstars %>" hidden>
+
+                    <img src="/uploads/<%= data.pdp %> " alt="" class="img-responsive profile-photo" />
+                    <h3><%= data.fname %>  <%= data.lname %></h3>
+                    <p class="text-muted">New User</p>
+                    <%- data.online %>
+                    <% if(data.me == 0) { %>
+                    <%- include("partial/rateme.ejs", {test: 'testt'}) %>
+                    <% } %>
+
+                  
+                      <div class="well">
+      
+                        <h4 style="color:black;font-size:25px;font-weight: 30px;"> My Fame Rate:</h4>
+                        <h4 style="color:black;font-size:25px;font-weight: 30px;"><%= data.fame %> /5</h4>
+                        in avrage
+                   
+                   
+                      </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-9">
+                <ul class="list-inline profile-menu">
+          
+                  <li><a></a></li>
+             
+                </ul>
+                <ul class="follow-me list-inline">
+                  <li style="font-size:20px"><b id="nlikes"><%= data.likes %> </b>
+                    <% if(data.me == 1) { %>
+                      likes for your profile 
+                      <% } else { %>
+                        Likes this profile
+                        <% } %>
+                    </li>
+           
+                  <% if(data.me == 0) { %>
+                    <% if(data.liked == 0) {%>
+                  <li><button class="btn-primary" style="border: solid 1px white;" id="like" onclick="Profile_Like(<%= data.id %>)">Like</button></li>
+                  <li><button class="btn-primary" style="background-color: rgb(221, 4, 4);border: solid 1px white;"  id="dislike" onclick="Profile_DisLike(<%= data.id %>)" hidden>Dislike</button></li>
+                  <% } else{ %>
+                    <li><button class="btn-primary" style="border: solid 1px white;" id="like" onclick="Profile_Like(<%= data.id %>)" hidden>Like</button></li>
+                    <li><button class="btn-primary" style="background-color: rgb(221, 4, 4);border: solid 1px white;"  id="dislike" onclick="Profile_DisLike(<%= data.id %>)">Dislike</button></li>
+                    <% } %>
+                    <li><button class="btn-primary" style="background-color: rgb(112, 107, 107);border: solid 1px white;" onclick="Profile_Report(<%= data.id %>)" >Report</button></li>
+
+                  <li><button class="btn-primary" style="background-color: black;border: solid 1px white;" onclick="Profile_Block(<%= data.id %>)" >Block</button></li>
+
+                    <% } %>
+                
+      
+
+                </ul>
+              </div>
+            </div>
+          </div><!--Timeline Menu for Large Screens End-->
+
+          <!--Timeline Menu for Small Screens-->
+          <div class="navbar-mobile hidden-lg hidden-md">
+            <div class="profile-info">
+              <img src="/uploads/<%= data.pdp %> " alt="" class="img-responsive profile-photo" />
+              <h4><%= data.fname %>  <%= data.lname %></h4>
+              <p class="text-muted">New User</p>
+              <%- data.online %>
+            </div>
+            
+            <div class="mobile-menu">
+            
+              <% if(data.me == 0) { %>
+                <% if(data.liked == 0) {%>
+              <li><button class="btn-primary" style="border: solid 1px white;" id="like2" onclick="Profile_Like(<%= data.id %>)">Like</button></li>
+              <li><button class="btn-primary" style="background-color: rgb(221, 4, 4);border: solid 1px white;"  id="dislike2" onclick="Profile_DisLike(<%= data.id %>)" hidden>Dislike</button></li>
+
+              <% } else{ %>
+                <li><button class="btn-primary" style="border: solid 1px white;" id="like2" onclick="Profile_Like(<%= data.id %>)" hidden>Like</button></li>
+                <li><button class="btn-primary" style="background-color: rgb(221, 4, 4);border: solid 1px white;"  id="dislike2" onclick="Profile_DisLike(<%= data.id %>)">Dislike</button></li>
+                <% } %>
+                <h1>sadasf</h1>
+                <li><button class="btn-primary" style="background-color: rgb(76, 71, 71);border: solid 1px white;" onclick="Profile_Report(<%= data.id %>)" >Report</button></li>
+
+              <li><button class="btn-primary" style="background-color: black;border: solid 1px white;" onclick="Profile_Block(<%= data.id %>)" >Block</button></li>
+
+
+                <% } %>
+                
+            </div>
+          </div><!--Timeline Menu for Small Screens End-->
+
+        </div>
+        <div id="page-contents">
+          <div class="row">
+            <div class="col-md-3" id="divcol3">
+         
+            </div>
+            <div class="col-md-7">
+
+              <!-- About
+              ================================================= -->
+              <div class="about-profile">
+                <div class="about-content-block">
+                
+                  <h4 class="grey"><i class="ion-ios-information-outline icon-in-title"></i>Personal Information</h4>
+                  <div class="row">
+                      <div class="col-md-3">
+                        <h4><b style="color:black"> First Name :</b><br></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" value="<%= data.fname %> " style="color:black;font-size: 20px;" disabled>
+                  
+                    </div>                      
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-3">
+                      <h4><b style="color:black"> Last Name :</b><br></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" value="<%= data.lname %> " style="color:black;font-size: 20px;" disabled>
+                
+                  </div>                      
+                </div>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <h4><b style="color:black"> Username :</b><br></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" value="<%= data.username %> " style="color:black;font-size: 20px;" disabled>
+                  </div>                      
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <h4><b style="color:black"> Age :</b><br></h4>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" value="<%= data.age %> y.o" style="color:black;font-size: 20px;" disabled>
+                </div>                      
+              </div>   
+              <div class="row">
+                <div class="col-md-3">
+                  <h4><b style="color:black"> Gender :</b><br></h4>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" value="<%= data.gender %> " style="color:black;font-size: 20px;" disabled>
+              </div>                      
+            </div>                  
+                </div>
+                </div>
+                <div class="about-content-block">
+                    <h4 class="grey"><i class="ion-ios-information-outline icon-in-title"></i>Biography</h4>
+                    <textarea type="text" class="form-control" style="height:200px;color:black;font-size: 20px;" disabled><%= data.bio %> </textarea> 
+                  </div>
+                  <hr>
+                <div class="about-content-block">
+                  <h4 class="grey"><i class="ion-ios-location-outline icon-in-title"></i>Location</h4>
+                  <p><%= data.city %> <%= data.country %> </p>
+                    <div id="map" style="height: 400px;"></div>
+                    <input id="lat" value="<%= data.lat %> " hidden>
+                    <input id="lon" value="<%= data.lon %> " hidden>
+                </div>
+                <hr>
+                <div class="row">
+                <div class="about-content-block">
+                  <h4 class="grey"><i class="ion-ios-heart-outline icon-in-title"></i>Interests</h4>
+                  <% data.tags.forEach(el=> { %>
+                    <div class="tagLabel"><p>  <%=  el.tag %></p></div>
+                <% }) %>
+                  <ul class="interests list-inline">
+                    <li ></li>
+                  </ul>
+                </div>
+              </div>
+                <hr> 
+                <div class="about-content-block">
+                    <h4 class="grey"><i class="icon ion-images icon-in-title"></i>Album</h4>
+                    <ul class="album-photos">
+                      <% var i = 0; data.album.forEach(el=> { %>
+                        <li>
+                          <div class="img-wrapper" data-toggle="modal" data-target=".photo-<%=i%>">
+                            <img class="toresize" src="/uploads/<%=  el.name %>" alt="photo"/>
+                          </div>
+                          <div class="modal fade photo-<%=i%>" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                <img src="/uploads/<%=  el.name %>" alt="photo" />
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                    <% i++;}) %>
+                      </ul>
+                  </div>
+              </div>
+            
+            <div class="col-md-2 static">
+              <div id="sticky-sidebar" class="historybar">
+                <h4 class="grey"><%= data.fname %>  <%= data.lname %>'s activity</h4>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Footer
+    ================================================= -->
+    <%- include("partial/footer.ejs") %>
+    
+    <!--preloader-->
+    <div id="spinner-wrapper">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts
+    ================================================= -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.sticky-kit.min.js"></script>
+    <script src="/js/jquery.scrollbar.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/notifbell.js"></script>
+
+
+    <% if(data.me == 0) { %>
+      <script src="/js/rate.js"></script>
+    
+      <% } %>
+      <script src="/js/like-profile.js"></script>
+    
+<script>
+var hist_id = $('#idrate').val();
+var isme = '<%=  data.me %>';
+
+$.post('/profile/history',{id: hist_id}, (row)=>{
+if(row.list != 0)
+ row.list.forEach(el => {
+   if(isme == 1)
+   who = 'You ';
+   else
+   who = '<%= data.fname %>';
+  var activity = ' <div class="feed-item">'+
+                 ' <div class="live-activity">'+
+                    '<p><a href="#" class="profile-link">'+who +'</a> liked <a target="_blank" href="/profile/'+el.id+'" ><b style="color:black">'+el.fname + ' ' + el.lname+'</b></a></p>'+
+                 ' </div>'+
+                '</div>';
+   $('.historybar').append(activity);
+   
+ });
+})
+  var fname = "<%= data.fname %>";
+  var lat = $('#lat').val();
+  var lon = $('#lon').val();
+  var pos = [{id: "bus-1", lat: lat , lon: lon, tooltip: "I'm Here :)"}];
+  new Mapkick.Map("map",  pos);
+
+  var viewData = { 
+    id: "bus-1", lat: 32.8781004, lon: -6.8887307
+};
+var map =[]
+var divWidth = $('.toresize').width(); 
+if(divWidth >= 100)
+    $('.toresize').height(divWidth);
+
+    $(document).ready(function(){
+  
+  
+  
+$('#like').on('click', function(){
+$('#nlikes').html(parseInt($('#nlikes').html()) + 1);
+  $('#like').toggle();
+
+  $('#dislike').toggle();
+})
+
+$('#dislike').on('click', function(){
+  $('#nlikes').html(parseInt($('#nlikes').html()) - 1);
+
+    $('#dislike').toggle();
+
+  $('#like').toggle();
+})
+
+$('#like2').on('click', function(){
+  $('#like2').toggle();
+
+  $('#dislike2').toggle();
+})
+
+$('#dislike2').on('click', function(){
+    $('#dislike2').toggle();
+
+  $('#like2').toggle();
+})
+});
+
+</script>
+  </body>
+</html>

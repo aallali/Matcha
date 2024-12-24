@@ -4,7 +4,8 @@ Tinder like web application, where you can Upload && Share up to 5 pictures, you
 <img src="./signup-page.png">
 
 ### Demo:
-[Watch the demo video](./demo.webm)
+https://github.com/user-attachments/assets/3503add3-6b5d-4fac-a6ea-15f5e6202c66
+
 
 ### Requirements:
 - Nodejs v14.21.3
@@ -38,6 +39,7 @@ npm run ch3l
 - lot of fun
 - this is the Biggest SQL query i ever wrote in my enitre life hhhhhhhhhhhh :D, i spent lot of time writing that and i enjoyed it to be honest (thats the query responsible of fetching matches based on given filter)
 <img src="./big-ass-sql-query.jpeg">
+
 ### Realisation Date:
 - late 2018, dont have exact time
 

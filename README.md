@@ -37,13 +37,17 @@ npm run ch3l
 - learned how to create real time apps using SocketIO
 - learned how to learn.
 - lot of fun
-- this is the Biggest SQL query i ever wrote in my enitre life hhhhhhhhhhhh :D, i spent lot of time writing that and i enjoyed it to be honest (thats the query responsible of fetching matches based on given filter)
+- this is the Biggest SQL query i ever wrote in my enitre life hhhhhhhhhhhh :D, not efficient or optimized, but i spent lot of time writing that and i enjoyed it to be honest (thats the query responsible of fetching matches based on given filter)
 <img src="./big-ass-sql-query.jpeg">
 
-### Realisation Date:
+**database reaction whenever i run this SQL query**
+
+<img alt="db-react" src="https://github.com/user-attachments/assets/b26fbe2f-0c11-4fe7-9fb7-3003e227041c" width="200" />
+
+### Realised At:
 - late 2018, dont have exact time
 
 ### NOTE:
-- the project used old techs, some of the packages didnt work while i was trying to record a use demo (mapbox, mmagic...), as fixed the map as screenshot for the sake of recording the video.
-- i dont plant to refact this project, just for record and portfolio
+- the project used old techs, some of the packages didnt work while i was trying to record a use demo (mapbox, mmagic...), i fixed the map as screenshot for the sake of recording the video.
+- i dont plan to refact this project, just for record and portfolio (and nostalgia)
 
